@@ -1,0 +1,274 @@
+input:"data"
+input_dim:1
+input_dim:1
+input_dim:64
+input_dim:64
+layer{
+  name: "gdata"
+  type: "ConstScale"
+  bottom: "data"
+  top: "gdata"
+  const_scale_param{
+	scale:0.0625
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "gdata"
+  top: "conv1"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 5
+    group_in: 1
+    group_out: 64
+  }
+}
+layer {
+  name: "conv1_relu"
+  type: "PReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "conv1"
+  top: "conv2"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "conv2_relu"
+  type: "PReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "ent_blk1_1"
+  type: "Convolution"
+  bottom: "conv2"
+  top: "ent_blk1_1"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk1_1_relu"
+  type: "PReLU"
+  bottom: "ent_blk1_1"
+  top: "ent_blk1_1"
+}
+layer {
+  name: "ent_blk1_2"
+  type: "Convolution"
+  bottom: "ent_blk1_1"
+  top: "ent_blk1_2"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk1_2_relu"
+  type: "PReLU"
+  bottom: "ent_blk1_2"
+  top: "ent_blk1_2"
+}
+layer {
+  name: "ent_blk1"
+  type: "Eltwise"
+  bottom: "conv2"
+  bottom: "ent_blk1_2"
+  top: "ent_blk1"
+}
+layer {
+  name: "ent_blk2_1"
+  type: "Convolution"
+  bottom: "ent_blk1"
+  top: "ent_blk2_1"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk2_1_relu"
+  type: "PReLU"
+  bottom: "ent_blk2_1"
+  top: "ent_blk2_1"
+}
+layer {
+  name: "ent_blk2_2"
+  type: "Convolution"
+  bottom: "ent_blk2_1"
+  top: "ent_blk2_2"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk2_2_relu"
+  type: "PReLU"
+  bottom: "ent_blk2_2"
+  top: "ent_blk2_2"
+}
+layer {
+  name: "ent_blk2"
+  type: "Eltwise"
+  bottom: "ent_blk1"
+  bottom: "ent_blk2_2"
+  top: "ent_blk2"
+}
+layer {
+  name: "ent_blk3_1"
+  type: "Convolution"
+  bottom: "ent_blk2"
+  top: "ent_blk3_1"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk3_1_relu"
+  type: "PReLU"
+  bottom: "ent_blk3_1"
+  top: "ent_blk3_1"
+}
+layer {
+  name: "ent_blk3_2"
+  type: "Convolution"
+  bottom: "ent_blk3_1"
+  top: "ent_blk3_2"
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 64
+  }
+}
+layer {
+  name: "ent_blk3_2_relu"
+  type: "PReLU"
+  bottom: "ent_blk3_2"
+  top: "ent_blk3_2"
+}
+layer {
+  name: "ent_blk3"
+  type: "Eltwise"
+  bottom: "ent_blk2"
+  bottom: "ent_blk3_2"
+  top: "ent_blk3"
+}
+layer {
+  name: "pdata"
+  type: "Convolution"
+  bottom: "ent_blk3"
+  top: "pdata"
+  convolution_param {
+    num_output: 16
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    constrain: 6
+    group_in: 64
+    group_out: 16
+  }
+}
+layer {
+  name: "pdata_trans"
+  type: "MTranspose"
+  bottom: "pdata"
+  top: "pdata_trans"
+  mtranspose_param {
+    groups: 16
+  }
+}
+layer {
+  name: "label_reshape"
+  type: "Reshape"
+  bottom: "data"
+  top: "label_reshape"
+  propagate_down: false
+  reshape_param {
+    shape {
+      dim: -1
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "pdata_trans"
+  bottom: "label_reshape"
+  top: "loss"
+  #loss_weight: 1000
+}
