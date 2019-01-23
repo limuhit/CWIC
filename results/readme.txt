@@ -1,0 +1,1 @@
+Directory for storing the decoding images and importance maps.
